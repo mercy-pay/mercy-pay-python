@@ -1,0 +1,648 @@
+[
+ {
+  "service": "Account",
+  "method": "retrieve",
+  "http": "GET",
+  "path": "account",
+  "ids": [],
+  "operationId": "getAccount"
+ },
+ {
+  "service": "Fee",
+  "method": "quote",
+  "http": "POST",
+  "path": "fees/quote",
+  "ids": [],
+  "operationId": "createFeeQuote"
+ },
+ {
+  "service": "ProviderStatus",
+  "method": "retrieve",
+  "http": "GET",
+  "path": "provider_status",
+  "ids": [],
+  "operationId": "getProviderStatus"
+ },
+ {
+  "service": "CheckoutSession",
+  "method": "create",
+  "http": "POST",
+  "path": "checkout_sessions",
+  "ids": [],
+  "operationId": "createCheckoutSession"
+ },
+ {
+  "service": "CheckoutSession",
+  "method": "all",
+  "http": "GET",
+  "path": "checkout_sessions",
+  "ids": [],
+  "operationId": "listCheckoutSessions"
+ },
+ {
+  "service": "CheckoutSession",
+  "method": "retrieve",
+  "http": "GET",
+  "path": "checkout_sessions/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "getCheckoutSession"
+ },
+ {
+  "service": "CheckoutSession",
+  "method": "expire",
+  "http": "POST",
+  "path": "checkout_sessions/{}/expire",
+  "ids": [
+   "id"
+  ],
+  "operationId": "expireCheckoutSession"
+ },
+ {
+  "service": "Payment",
+  "method": "create",
+  "http": "POST",
+  "path": "payments",
+  "ids": [],
+  "operationId": "createPayment"
+ },
+ {
+  "service": "Payment",
+  "method": "all",
+  "http": "GET",
+  "path": "payments",
+  "ids": [],
+  "operationId": "listPayments"
+ },
+ {
+  "service": "Payment",
+  "method": "retrieve",
+  "http": "GET",
+  "path": "payments/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "getPayment"
+ },
+ {
+  "service": "Payment",
+  "method": "refund",
+  "http": "POST",
+  "path": "payments/{}/refunds",
+  "ids": [
+   "id"
+  ],
+  "operationId": "createRefund"
+ },
+ {
+  "service": "Refund",
+  "method": "all",
+  "http": "GET",
+  "path": "refunds",
+  "ids": [],
+  "operationId": "listRefunds"
+ },
+ {
+  "service": "Refund",
+  "method": "retrieve",
+  "http": "GET",
+  "path": "refunds/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "getRefund"
+ },
+ {
+  "service": "Refund",
+  "method": "cancel",
+  "http": "POST",
+  "path": "refunds/{}/cancel",
+  "ids": [
+   "id"
+  ],
+  "operationId": "cancelRefund"
+ },
+ {
+  "service": "Wallet",
+  "method": "all",
+  "http": "GET",
+  "path": "wallets",
+  "ids": [],
+  "operationId": "listWallets"
+ },
+ {
+  "service": "WalletTransfer",
+  "method": "all",
+  "http": "GET",
+  "path": "wallet_transfers",
+  "ids": [],
+  "operationId": "listWalletTransfers"
+ },
+ {
+  "service": "WalletTransfer",
+  "method": "create",
+  "http": "POST",
+  "path": "wallet_transfers",
+  "ids": [],
+  "operationId": "createWalletTransfer"
+ },
+ {
+  "service": "Payout",
+  "method": "create",
+  "http": "POST",
+  "path": "payouts",
+  "ids": [],
+  "operationId": "createPayout"
+ },
+ {
+  "service": "Payout",
+  "method": "all",
+  "http": "GET",
+  "path": "payouts",
+  "ids": [],
+  "operationId": "listPayouts"
+ },
+ {
+  "service": "Payout",
+  "method": "retrieve",
+  "http": "GET",
+  "path": "payouts/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "getPayout"
+ },
+ {
+  "service": "PaymentLink",
+  "method": "create",
+  "http": "POST",
+  "path": "payment_links",
+  "ids": [],
+  "operationId": "createPaymentLink"
+ },
+ {
+  "service": "PaymentLink",
+  "method": "all",
+  "http": "GET",
+  "path": "payment_links",
+  "ids": [],
+  "operationId": "listPaymentLinks"
+ },
+ {
+  "service": "PaymentLink",
+  "method": "retrieve",
+  "http": "GET",
+  "path": "payment_links/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "getPaymentLink"
+ },
+ {
+  "service": "PaymentLink",
+  "method": "update",
+  "http": "PATCH",
+  "path": "payment_links/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "updatePaymentLink"
+ },
+ {
+  "service": "PaymentLink",
+  "method": "delete",
+  "http": "DELETE",
+  "path": "payment_links/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "deletePaymentLink"
+ },
+ {
+  "service": "PaymentLink",
+  "method": "archive",
+  "http": "POST",
+  "path": "payment_links/{}/archive",
+  "ids": [
+   "id"
+  ],
+  "operationId": "archivePaymentLink"
+ },
+ {
+  "service": "PaymentLink",
+  "method": "payments",
+  "http": "GET",
+  "path": "payment_links/{}/payments",
+  "ids": [
+   "id"
+  ],
+  "operationId": "listPaymentLinkPayments"
+ },
+ {
+  "service": "Plan",
+  "method": "create",
+  "http": "POST",
+  "path": "plans",
+  "ids": [],
+  "operationId": "createPlan"
+ },
+ {
+  "service": "Plan",
+  "method": "all",
+  "http": "GET",
+  "path": "plans",
+  "ids": [],
+  "operationId": "listPlans"
+ },
+ {
+  "service": "Plan",
+  "method": "retrieve",
+  "http": "GET",
+  "path": "plans/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "getPlan"
+ },
+ {
+  "service": "Plan",
+  "method": "update",
+  "http": "PATCH",
+  "path": "plans/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "updatePlan"
+ },
+ {
+  "service": "Plan",
+  "method": "delete",
+  "http": "DELETE",
+  "path": "plans/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "deletePlan"
+ },
+ {
+  "service": "Plan",
+  "method": "archive",
+  "http": "POST",
+  "path": "plans/{}/archive",
+  "ids": [
+   "id"
+  ],
+  "operationId": "archivePlan"
+ },
+ {
+  "service": "Plan",
+  "method": "restore",
+  "http": "POST",
+  "path": "plans/{}/restore",
+  "ids": [
+   "id"
+  ],
+  "operationId": "restorePlan"
+ },
+ {
+  "service": "Customer",
+  "method": "create",
+  "http": "POST",
+  "path": "customers",
+  "ids": [],
+  "operationId": "createCustomer"
+ },
+ {
+  "service": "Customer",
+  "method": "all",
+  "http": "GET",
+  "path": "customers",
+  "ids": [],
+  "operationId": "listCustomers"
+ },
+ {
+  "service": "Customer",
+  "method": "retrieve",
+  "http": "GET",
+  "path": "customers/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "getCustomer"
+ },
+ {
+  "service": "Customer",
+  "method": "update",
+  "http": "PATCH",
+  "path": "customers/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "updateCustomer"
+ },
+ {
+  "service": "Customer",
+  "method": "delete",
+  "http": "DELETE",
+  "path": "customers/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "deleteCustomer"
+ },
+ {
+  "service": "Customer",
+  "method": "paymentMethods",
+  "http": "GET",
+  "path": "customers/{}/payment_methods",
+  "ids": [
+   "customerId"
+  ],
+  "operationId": "listCustomerPaymentMethods"
+ },
+ {
+  "service": "Customer",
+  "method": "setDefaultPaymentMethod",
+  "http": "POST",
+  "path": "customers/{}/payment_methods/{}/default",
+  "ids": [
+   "customerId",
+   "paymentMethodId"
+  ],
+  "operationId": "setDefaultPaymentMethod"
+ },
+ {
+  "service": "Customer",
+  "method": "removePaymentMethod",
+  "http": "DELETE",
+  "path": "customers/{}/payment_methods/{}",
+  "ids": [
+   "customerId",
+   "paymentMethodId"
+  ],
+  "operationId": "removePaymentMethod"
+ },
+ {
+  "service": "Subscription",
+  "method": "create",
+  "http": "POST",
+  "path": "subscriptions",
+  "ids": [],
+  "operationId": "createSubscription"
+ },
+ {
+  "service": "Subscription",
+  "method": "all",
+  "http": "GET",
+  "path": "subscriptions",
+  "ids": [],
+  "operationId": "listSubscriptions"
+ },
+ {
+  "service": "Subscription",
+  "method": "retrieve",
+  "http": "GET",
+  "path": "subscriptions/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "getSubscription"
+ },
+ {
+  "service": "Subscription",
+  "method": "update",
+  "http": "PATCH",
+  "path": "subscriptions/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "updateSubscription"
+ },
+ {
+  "service": "Subscription",
+  "method": "cancel",
+  "http": "POST",
+  "path": "subscriptions/{}/cancel",
+  "ids": [
+   "id"
+  ],
+  "operationId": "cancelSubscription"
+ },
+ {
+  "service": "Subscription",
+  "method": "reactivate",
+  "http": "POST",
+  "path": "subscriptions/{}/reactivate",
+  "ids": [
+   "id"
+  ],
+  "operationId": "reactivateSubscription"
+ },
+ {
+  "service": "Subscription",
+  "method": "advance",
+  "http": "POST",
+  "path": "subscriptions/{}/advance",
+  "ids": [
+   "id"
+  ],
+  "operationId": "advanceSubscription"
+ },
+ {
+  "service": "Subscription",
+  "method": "pause",
+  "http": "POST",
+  "path": "subscriptions/{}/pause",
+  "ids": [
+   "id"
+  ],
+  "operationId": "pauseSubscription"
+ },
+ {
+  "service": "Subscription",
+  "method": "resume",
+  "http": "POST",
+  "path": "subscriptions/{}/resume",
+  "ids": [
+   "id"
+  ],
+  "operationId": "resumeSubscription"
+ },
+ {
+  "service": "Subscription",
+  "method": "invoices",
+  "http": "GET",
+  "path": "subscriptions/{}/invoices",
+  "ids": [
+   "id"
+  ],
+  "operationId": "listSubscriptionInvoices"
+ },
+ {
+  "service": "Invoice",
+  "method": "all",
+  "http": "GET",
+  "path": "invoices",
+  "ids": [],
+  "operationId": "listInvoices"
+ },
+ {
+  "service": "Invoice",
+  "method": "retrieve",
+  "http": "GET",
+  "path": "invoices/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "getInvoice"
+ },
+ {
+  "service": "Invoice",
+  "method": "pay",
+  "http": "POST",
+  "path": "invoices/{}/pay",
+  "ids": [
+   "id"
+  ],
+  "operationId": "payInvoice"
+ },
+ {
+  "service": "Invoice",
+  "method": "send",
+  "http": "POST",
+  "path": "invoices/{}/send",
+  "ids": [
+   "id"
+  ],
+  "operationId": "sendInvoice"
+ },
+ {
+  "service": "BillingPortal",
+  "method": "createSession",
+  "http": "POST",
+  "path": "billing_portal/sessions",
+  "ids": [],
+  "operationId": "createBillingPortalSession"
+ },
+ {
+  "service": "Event",
+  "method": "all",
+  "http": "GET",
+  "path": "events",
+  "ids": [],
+  "operationId": "listEvents"
+ },
+ {
+  "service": "Event",
+  "method": "retrieve",
+  "http": "GET",
+  "path": "events/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "getEvent"
+ },
+ {
+  "service": "Event",
+  "method": "deliveries",
+  "http": "GET",
+  "path": "events/{}/deliveries",
+  "ids": [
+   "id"
+  ],
+  "operationId": "listEventDeliveries"
+ },
+ {
+  "service": "Event",
+  "method": "resend",
+  "http": "POST",
+  "path": "events/{}/resend",
+  "ids": [
+   "id"
+  ],
+  "operationId": "resendEvent"
+ },
+ {
+  "service": "WebhookEndpoint",
+  "method": "create",
+  "http": "POST",
+  "path": "webhook_endpoints",
+  "ids": [],
+  "operationId": "createWebhookEndpoint"
+ },
+ {
+  "service": "WebhookEndpoint",
+  "method": "all",
+  "http": "GET",
+  "path": "webhook_endpoints",
+  "ids": [],
+  "operationId": "listWebhookEndpoints"
+ },
+ {
+  "service": "WebhookEndpoint",
+  "method": "retrieve",
+  "http": "GET",
+  "path": "webhook_endpoints/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "getWebhookEndpoint"
+ },
+ {
+  "service": "WebhookEndpoint",
+  "method": "update",
+  "http": "PATCH",
+  "path": "webhook_endpoints/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "updateWebhookEndpoint"
+ },
+ {
+  "service": "WebhookEndpoint",
+  "method": "delete",
+  "http": "DELETE",
+  "path": "webhook_endpoints/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "deleteWebhookEndpoint"
+ },
+ {
+  "service": "WebhookEndpoint",
+  "method": "rotateSecret",
+  "http": "POST",
+  "path": "webhook_endpoints/{}/rotate_secret",
+  "ids": [
+   "id"
+  ],
+  "operationId": "rotateWebhookEndpointSecret"
+ },
+ {
+  "service": "WebhookEndpoint",
+  "method": "test",
+  "http": "POST",
+  "path": "webhook_endpoints/{}/test",
+  "ids": [
+   "id"
+  ],
+  "operationId": "testWebhookEndpoint"
+ },
+ {
+  "service": "RequestLog",
+  "method": "all",
+  "http": "GET",
+  "path": "request_logs",
+  "ids": [],
+  "operationId": "listRequestLogs"
+ },
+ {
+  "service": "TestHelper",
+  "method": "triggerEvent",
+  "http": "POST",
+  "path": "test_helpers/events",
+  "ids": [],
+  "operationId": "createTestEvent"
+ }
+]
