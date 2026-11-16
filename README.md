@@ -1,6 +1,6 @@
 # Mercy Pay pour Python
 
-La bibliothèque Python officielle de l'API [Mercy Pay](https://mercy-pay.com) : paiements mobile money et carte. Python 3.9 ou plus, un client synchrone et un client `async`.
+La bibliothèque Python officielle de l'API [Mercy Pay](https://mercy-pay.com) : paiements mobile money et carte. Python 3.10 ou plus, un client synchrone et un client `async`.
 
 ```sh
 pip install mercy-pay
