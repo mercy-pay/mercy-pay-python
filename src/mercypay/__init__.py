@@ -4,8 +4,9 @@ from typing import Any, Dict, Optional
 
 import httpx
 
-from . import webhooks
+from . import catalog, webhooks
 from ._client import AsyncTransport, SyncTransport
+from ._helpers import WaitTimeoutError
 from ._errors import (
     ApiError,
     ApiServerError,
@@ -21,7 +22,7 @@ from ._errors import (
 from ._object import MercyPayObject
 from ._page import AsyncPage, Page
 from ._resources import (
-    AccountResource, AsyncAccountResource, AsyncBillingPortalResource, AsyncCheckoutSessionsResource, AsyncCustomersResource, AsyncEventsResource, AsyncFeesResource, AsyncInvoicesResource, AsyncPaymentLinksResource, AsyncPaymentsResource, AsyncPayoutsResource, AsyncPlansResource, AsyncProviderStatusResource, AsyncRefundsResource, AsyncRequestLogsResource, AsyncSubscriptionsResource, AsyncTestHelpersResource, AsyncWalletTransfersResource, AsyncWalletsResource, AsyncWebhookEndpointsResource, BillingPortalResource, CheckoutSessionsResource, CustomersResource, EventsResource, FeesResource, InvoicesResource, PaymentLinksResource, PaymentsResource, PayoutsResource, PlansResource, ProviderStatusResource, RefundsResource, RequestLogsResource, SubscriptionsResource, TestHelpersResource, WalletTransfersResource, WalletsResource, WebhookEndpointsResource,
+    AccountResource, AsyncAccountResource, AsyncBillingPortalResource, AsyncCheckoutSessionsResource, AsyncCustomersResource, AsyncEmbedDomainsResource, AsyncEventsResource, AsyncFeesResource, AsyncInvoicesResource, AsyncPaymentLinksResource, AsyncPaymentsResource, AsyncPayoutsResource, AsyncPlansResource, AsyncProviderStatusResource, AsyncRefundsResource, AsyncRequestLogsResource, AsyncSubscriptionsResource, AsyncTestHelpersResource, AsyncWalletTransfersResource, AsyncWalletsResource, AsyncWebhookEndpointsResource, BillingPortalResource, CheckoutSessionsResource, CustomersResource, EmbedDomainsResource, EventsResource, FeesResource, InvoicesResource, PaymentLinksResource, PaymentsResource, PayoutsResource, PlansResource, ProviderStatusResource, RefundsResource, RequestLogsResource, SubscriptionsResource, TestHelpersResource, WalletTransfersResource, WalletsResource, WebhookEndpointsResource,
 )
 from ._version import VERSION
 from .webhooks import construct_event, verify_signature
@@ -43,6 +44,8 @@ __all__ = [
     "PaymentError",
     "RateLimitError",
     "SignatureVerificationError",
+    "WaitTimeoutError",
+    "catalog",
     "construct_event",
     "verify_signature",
     "webhooks",
@@ -75,6 +78,7 @@ class MercyPay:
         self.payment_links = PaymentLinksResource(self._transport)
         self.plans = PlansResource(self._transport)
         self.customers = CustomersResource(self._transport)
+        self.embed_domains = EmbedDomainsResource(self._transport)
         self.subscriptions = SubscriptionsResource(self._transport)
         self.invoices = InvoicesResource(self._transport)
         self.billing_portal = BillingPortalResource(self._transport)
@@ -111,6 +115,7 @@ class AsyncMercyPay:
         self.payment_links = AsyncPaymentLinksResource(self._transport)
         self.plans = AsyncPlansResource(self._transport)
         self.customers = AsyncCustomersResource(self._transport)
+        self.embed_domains = AsyncEmbedDomainsResource(self._transport)
         self.subscriptions = AsyncSubscriptionsResource(self._transport)
         self.invoices = AsyncInvoicesResource(self._transport)
         self.billing_portal = AsyncBillingPortalResource(self._transport)

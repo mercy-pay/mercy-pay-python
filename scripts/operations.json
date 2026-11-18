@@ -644,5 +644,59 @@
   "path": "test_helpers/events",
   "ids": [],
   "operationId": "createTestEvent"
+ },
+ {
+  "service": "EmbedDomain",
+  "method": "create",
+  "http": "POST",
+  "path": "embed_domains",
+  "ids": [],
+  "operationId": "createEmbedDomain"
+ },
+ {
+  "service": "EmbedDomain",
+  "method": "all",
+  "http": "GET",
+  "path": "embed_domains",
+  "ids": [],
+  "operationId": "listEmbedDomains"
+ },
+ {
+  "service": "EmbedDomain",
+  "method": "retrieve",
+  "http": "GET",
+  "path": "embed_domains/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "getEmbedDomain"
+ },
+ {
+  "service": "EmbedDomain",
+  "method": "delete",
+  "http": "DELETE",
+  "path": "embed_domains/{}",
+  "ids": [
+   "id"
+  ],
+  "operationId": "deleteEmbedDomain"
+ },
+ {
+  "service": "EmbedDomain",
+  "method": "verify",
+  "http": "POST",
+  "path": "embed_domains/{}/verify",
+  "ids": [
+   "id"
+  ],
+  "operationId": "verifyEmbedDomain"
+ },
+ {
+  "service": "TestHelper",
+  "method": "mobileMoneyNumbers",
+  "http": "GET",
+  "path": "test_helpers/mobile_money_numbers",
+  "ids": [],
+  "operationId": "listTestMobileMoneyNumbers"
  }
 ]

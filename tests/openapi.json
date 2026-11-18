@@ -68,6 +68,10 @@
     {
       "name": "Journal des requêtes",
       "description": "Les appels faits avec vos clés, pour suivre une intégration depuis le terminal."
+    },
+    {
+      "name": "Sites autorisés",
+      "description": "Les sites sur lesquels le paiement intégré peut s'afficher."
     }
   ],
   "paths": {
@@ -785,6 +789,15 @@
                     },
                     "description": "Ne proposer que ces pays mobile money (codes à 3 lettres, pays ouverts uniquement). Absent : tous les pays ouverts."
                   },
+                  "ui_mode": {
+                    "type": "string",
+                    "enum": [
+                      "hosted",
+                      "embedded"
+                    ],
+                    "default": "hosted",
+                    "description": "`hosted` (par défaut) : vous envoyez le client sur `checkout_url`. `embedded` : le formulaire de paiement s'affiche dans votre propre page, avec le `client_secret` renvoyé. Voir [Paiement intégré](/payments/embedded)."
+                  },
                   "metadata": {
                     "type": "object",
                     "additionalProperties": true,
@@ -834,6 +847,8 @@
                     "success_url": "https://boutique-ada.example/merci",
                     "cancel_url": "https://boutique-ada.example/panier",
                     "status": "created",
+                    "ui_mode": "hosted",
+                    "client_secret": null,
                     "metadata": {
                       "order_id": "4821"
                     },
@@ -961,6 +976,8 @@
                       "success_url": "https://boutique-ada.example/merci",
                       "cancel_url": "https://boutique-ada.example/panier",
                       "status": "created",
+                      "ui_mode": "hosted",
+                      "client_secret": null,
                       "metadata": {
                         "order_id": "4821"
                       },
@@ -1033,6 +1050,8 @@
                     "success_url": "https://boutique-ada.example/merci",
                     "cancel_url": "https://boutique-ada.example/panier",
                     "status": "completed",
+                    "ui_mode": "hosted",
+                    "client_secret": null,
                     "metadata": {
                       "order_id": "4821"
                     },
@@ -1582,6 +1601,24 @@
                       }
                     }
                   }
+                },
+                "example": {
+                  "object": "list",
+                  "url": "/api/v1/wallet_transfers",
+                  "has_more": false,
+                  "next_cursor": null,
+                  "data": [
+                    {
+                      "id": "wtr_3b7e1c9a4d2f4e8b9a6c5d1e0f2a7b84",
+                      "object": "wallet_transfer",
+                      "livemode": false,
+                      "created": "2026-11-12T09:30:00+00:00",
+                      "from_wallet": "wal_8c2d4e6f1a3b4c5d9e7f0a2b4c6d8e1f",
+                      "to_wallet": "wal_1f3e5d7c9b2a4f6e8d0c2b4a6f8e0d2c",
+                      "amount": 25000,
+                      "currency": "XAF"
+                    }
+                  ]
                 }
               }
             }
@@ -1592,7 +1629,8 @@
           "429": {
             "$ref": "#/components/responses/RateLimited"
           }
-        }
+        },
+        "description": "Les virements entre vos soldes, du plus récent au plus ancien. Filtrables par date et paginés par curseur."
       },
       "post": {
         "tags": [
@@ -1652,6 +1690,18 @@
                     "data": {
                       "$ref": "#/components/schemas/WalletTransfer"
                     }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "id": "wtr_3b7e1c9a4d2f4e8b9a6c5d1e0f2a7b84",
+                    "object": "wallet_transfer",
+                    "livemode": false,
+                    "created": "2026-11-12T09:30:00+00:00",
+                    "from_wallet": "wal_8c2d4e6f1a3b4c5d9e7f0a2b4c6d8e1f",
+                    "to_wallet": "wal_1f3e5d7c9b2a4f6e8d0c2b4a6f8e0d2c",
+                    "amount": 25000,
+                    "currency": "XAF"
                   }
                 }
               }
@@ -3016,6 +3066,9 @@
               "type": "string"
             },
             "description": "Identifiant du lien (`plink_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "responses": {
@@ -3713,6 +3766,9 @@
               "type": "string"
             },
             "description": "Identifiant du plan (`plan_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "responses": {
@@ -3780,6 +3836,9 @@
               "type": "string"
             },
             "description": "Identifiant du plan (`plan_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "responses": {
@@ -4461,6 +4520,9 @@
               "type": "string"
             },
             "description": "Identifiant du moyen de paiement (`pm_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "responses": {
@@ -5195,6 +5257,9 @@
               "type": "string"
             },
             "description": "Identifiant de l'abonnement (`sub_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "requestBody": {
@@ -5311,6 +5376,9 @@
               "type": "string"
             },
             "description": "Identifiant de l'abonnement (`sub_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "responses": {
@@ -5408,6 +5476,9 @@
               "type": "string"
             },
             "description": "Identifiant de l'abonnement (`sub_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "responses": {
@@ -5505,6 +5576,9 @@
               "type": "string"
             },
             "description": "Identifiant de l'abonnement (`sub_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "requestBody": {
@@ -5622,6 +5696,9 @@
               "type": "string"
             },
             "description": "Identifiant de l'abonnement (`sub_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "responses": {
@@ -6050,6 +6127,9 @@
               "type": "string"
             },
             "description": "Identifiant de la facture (`in_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "responses": {
@@ -6125,6 +6205,9 @@
               "type": "string"
             },
             "description": "Identifiant de la facture (`in_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "responses": {
@@ -6298,7 +6381,12 @@
           "429": {
             "$ref": "#/components/responses/RateLimited"
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ]
       }
     },
     "/api/v1/checkout_sessions/{id}/expire": {
@@ -6318,6 +6406,9 @@
               "type": "string"
             },
             "description": "Identifiant de la session (`cs_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "responses": {
@@ -6349,6 +6440,8 @@
                     "success_url": "https://boutique-ada.example/merci",
                     "cancel_url": "https://boutique-ada.example/panier",
                     "status": "expired",
+                    "ui_mode": "hosted",
+                    "client_secret": null,
                     "metadata": {
                       "order_id": "4821"
                     },
@@ -6573,7 +6666,8 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
-        }
+        },
+        "description": "Un événement, avec l'objet concerné tel qu'il a été envoyé à vos endpoints. Utile pour relire un webhook manqué ou vérifier son contenu."
       }
     },
     "/api/v1/events/{id}/deliveries": {
@@ -6636,6 +6730,422 @@
                         "$ref": "#/components/schemas/WebhookDelivery"
                       }
                     }
+                  }
+                },
+                "example": {
+                  "object": "list",
+                  "url": "/api/v1/events/evt_01JC9A2B3C4D5E6F7G8H9J0K1M/deliveries",
+                  "has_more": false,
+                  "next_cursor": null,
+                  "data": [
+                    {
+                      "id": "whd_6a1f3c5e7b9d4f2a8c0e1b3d5f7a9c2e",
+                      "object": "webhook_delivery",
+                      "livemode": false,
+                      "created": "2026-11-08T10:42:18+00:00",
+                      "event": "evt_01JC9A2B3C4D5E6F7G8H9J0K1M",
+                      "webhook_endpoint": "we_2c4e6a8b0d1f4a3c5e7b9d0f2a4c6e8b",
+                      "url": "https://boutique.example/webhooks/mercy-pay",
+                      "status": "delivered",
+                      "attempt_count": 2,
+                      "response_code": 200,
+                      "next_retry_at": null,
+                      "delivered_at": "2026-11-08T10:43:20+00:00",
+                      "attempts": [
+                        {
+                          "number": 1,
+                          "attempted_at": "2026-11-08T10:42:18+00:00",
+                          "status_code": null,
+                          "duration_ms": 10000,
+                          "error": "Délai de réponse dépassé"
+                        },
+                        {
+                          "number": 2,
+                          "attempted_at": "2026-11-08T10:43:20+00:00",
+                          "status_code": 200,
+                          "duration_ms": 184,
+                          "error": null
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/embed_domains": {
+      "get": {
+        "tags": [
+          "Sites autorisés"
+        ],
+        "operationId": "listEmbedDomains",
+        "summary": "Lister les sites autorisés",
+        "description": "Les sites sur lesquels le paiement intégré peut s'afficher, avec leur état de vérification. En sandbox, `localhost`, `127.0.0.1` et les domaines `.test` et `.localhost` sont autorisés sans déclaration.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "description": "Nombre d'objets"
+          },
+          {
+            "name": "starting_after",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Le `next_cursor` de la page précédente"
+          },
+          {
+            "name": "ending_before",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Un id, pour revenir à la page d'avant"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Une page de sites",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "object": {
+                      "type": "string",
+                      "const": "list"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "has_more": {
+                      "type": "boolean"
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "À passer en `starting_after` pour la page suivante"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EmbedDomain"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "object": "list",
+                  "url": "/api/v1/embed_domains",
+                  "has_more": false,
+                  "next_cursor": null,
+                  "data": [
+                    {
+                      "id": "edom_6f1c2a8e4b3d4e5f9a0b1c2d3e4f5a6b",
+                      "object": "embed_domain",
+                      "livemode": true,
+                      "created": "2026-11-17T09:30:00+00:00",
+                      "hostname": "boutique.com",
+                      "status": "verified",
+                      "verification": {
+                        "type": "TXT",
+                        "name": "_mercy-pay.boutique.com",
+                        "value": "mercy-pay-verification=Zq8Lw2vR7tYc4NbK1sXe9mPaU3gHd6Jf"
+                      },
+                      "verified_at": "2026-11-17T09:42:00+00:00",
+                      "last_checked_at": "2026-11-17T10:00:00+00:00"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Sites autorisés"
+        ],
+        "operationId": "createEmbedDomain",
+        "summary": "Ajouter un site",
+        "description": "Ajoute un site, puis lit tout de suite son enregistrement TXT. Créez chez votre hébergeur de domaine l'enregistrement indiqué dans `verification` : le site devient `verified` dès qu'il est visible (vérification automatique toutes les heures, ou avec la route verify). Un site vaut aussi pour ses sous-domaines. Clé live uniquement, car un site autorisé vaut aussi pour le live.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "hostname"
+                ],
+                "properties": {
+                  "hostname": {
+                    "type": "string",
+                    "maxLength": 253,
+                    "description": "Le domaine de votre site, par exemple `boutique.com`. Un `https://` ou un chemin éventuels sont retirés."
+                  }
+                }
+              },
+              "example": {
+                "hostname": "boutique.com"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Le site ajouté",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/EmbedDomain"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "id": "edom_6f1c2a8e4b3d4e5f9a0b1c2d3e4f5a6b",
+                    "object": "embed_domain",
+                    "livemode": true,
+                    "created": "2026-11-17T09:30:00+00:00",
+                    "hostname": "boutique.com",
+                    "status": "verified",
+                    "verification": {
+                      "type": "TXT",
+                      "name": "_mercy-pay.boutique.com",
+                      "value": "mercy-pay-verification=Zq8Lw2vR7tYc4NbK1sXe9mPaU3gHd6Jf"
+                    },
+                    "verified_at": "2026-11-17T09:42:00+00:00",
+                    "last_checked_at": "2026-11-17T10:00:00+00:00"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationFailed"
+          }
+        }
+      }
+    },
+    "/api/v1/embed_domains/{id}": {
+      "get": {
+        "tags": [
+          "Sites autorisés"
+        ],
+        "operationId": "getEmbedDomain",
+        "summary": "Lire un site autorisé",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant du site (`edom_…`)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Le site",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/EmbedDomain"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "id": "edom_6f1c2a8e4b3d4e5f9a0b1c2d3e4f5a6b",
+                    "object": "embed_domain",
+                    "livemode": true,
+                    "created": "2026-11-17T09:30:00+00:00",
+                    "hostname": "boutique.com",
+                    "status": "verified",
+                    "verification": {
+                      "type": "TXT",
+                      "name": "_mercy-pay.boutique.com",
+                      "value": "mercy-pay-verification=Zq8Lw2vR7tYc4NbK1sXe9mPaU3gHd6Jf"
+                    },
+                    "verified_at": "2026-11-17T09:42:00+00:00",
+                    "last_checked_at": "2026-11-17T10:00:00+00:00"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "description": "Un site autorisé à afficher le paiement intégré, avec son état de vérification et l'enregistrement TXT à créer."
+      },
+      "delete": {
+        "tags": [
+          "Sites autorisés"
+        ],
+        "operationId": "deleteEmbedDomain",
+        "summary": "Retirer un site",
+        "description": "Le paiement intégré ne s'affiche plus sur ce site. Clé live uniquement.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant du site (`edom_…`)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Le site est retiré",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "const": "embed_domain"
+                    },
+                    "deleted": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "edom_6f1c2a8e4b3d4e5f9a0b1c2d3e4f5a6b",
+                  "object": "embed_domain",
+                  "deleted": true
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/embed_domains/{id}/verify": {
+      "post": {
+        "tags": [
+          "Sites autorisés"
+        ],
+        "operationId": "verifyEmbedDomain",
+        "summary": "Vérifier un site maintenant",
+        "description": "Lit l'enregistrement TXT tout de suite, sans attendre la vérification de chaque heure. Une modification DNS peut mettre quelques heures à être visible.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant du site (`edom_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Le site, avec son nouvel état",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/EmbedDomain"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "id": "edom_6f1c2a8e4b3d4e5f9a0b1c2d3e4f5a6b",
+                    "object": "embed_domain",
+                    "livemode": true,
+                    "created": "2026-11-17T09:30:00+00:00",
+                    "hostname": "boutique.com",
+                    "status": "verified",
+                    "verification": {
+                      "type": "TXT",
+                      "name": "_mercy-pay.boutique.com",
+                      "value": "mercy-pay-verification=Zq8Lw2vR7tYc4NbK1sXe9mPaU3gHd6Jf"
+                    },
+                    "verified_at": "2026-11-17T09:42:00+00:00",
+                    "last_checked_at": "2026-11-17T10:00:00+00:00"
                   }
                 }
               }
@@ -6756,7 +7266,8 @@
           "422": {
             "$ref": "#/components/responses/ValidationFailed"
           }
-        }
+        },
+        "description": "Vos endpoints de webhooks, avec les événements que chacun reçoit. Le secret de signature n'est jamais renvoyé ici."
       },
       "post": {
         "tags": [
@@ -6922,7 +7433,8 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
-        }
+        },
+        "description": "Un endpoint de webhooks. Le secret de signature n'est renvoyé qu'à la création et à la rotation."
       },
       "patch": {
         "tags": [
@@ -7089,7 +7601,8 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
-        }
+        },
+        "description": "Supprime l'endpoint : il ne reçoit plus aucun événement. Les envois passés restent consultables sur leurs événements."
       }
     },
     "/api/v1/webhook_endpoints/{id}/rotate_secret": {
@@ -7109,6 +7622,9 @@
               "type": "string"
             },
             "description": "Identifiant de l'endpoint (`we_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "responses": {
@@ -7173,6 +7689,9 @@
               "type": "string"
             },
             "description": "Identifiant de l'endpoint (`we_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "responses": {
@@ -7235,6 +7754,9 @@
               "type": "string"
             },
             "description": "Identifiant de l'événement (`evt_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "requestBody": {
@@ -7531,6 +8053,36 @@
                       "$ref": "#/components/schemas/Event"
                     }
                   }
+                },
+                "example": {
+                  "data": {
+                    "id": "evt_01JC9A2B3C4D5E6F7G8H9J0K1M",
+                    "object": "event",
+                    "livemode": false,
+                    "created": "2026-11-08T10:42:17+00:00",
+                    "type": "payment.succeeded",
+                    "data": {
+                      "id": "pay_5e0c8a7b3d1f4a2e9c648b7f0d2e1a93",
+                      "object": "payment",
+                      "livemode": false,
+                      "created": "2026-10-04T10:20:00+00:00",
+                      "checkout_session": null,
+                      "amount": 1000,
+                      "fee_amount": 50,
+                      "net_amount": 950,
+                      "currency": "XAF",
+                      "payment_method": "mobile_money",
+                      "mobile_money_country": "CMR",
+                      "mobile_money_provider": "MTN_MOMO_CMR",
+                      "status": "succeeded",
+                      "failure_code": null,
+                      "failure_reason": null,
+                      "metadata": {
+                        "test_helper": true
+                      },
+                      "next_action": null
+                    }
+                  }
                 }
               }
             }
@@ -7547,7 +8099,12 @@
           "429": {
             "$ref": "#/components/responses/RateLimited"
           }
-        }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ]
       }
     },
     "/api/v1/payments/{id}/refunds": {
@@ -7811,7 +8368,8 @@
           "429": {
             "$ref": "#/components/responses/RateLimited"
           }
-        }
+        },
+        "description": "Un remboursement, avec son statut. Suivez ses changements avec les événements `refund.succeeded`, `refund.failed` et `refund.canceled`."
       }
     },
     "/api/v1/refunds/{id}/cancel": {
@@ -7831,6 +8389,9 @@
               "type": "string"
             },
             "description": "Identifiant du remboursement (`re_…`)"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
           }
         ],
         "responses": {
@@ -7873,6 +8434,104 @@
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/v1/test_helpers/mobile_money_numbers": {
+      "get": {
+        "summary": "Lister les numéros de test mobile money",
+        "description": "Les numéros de la sandbox et ce que chacun produit : un paiement réussi, refusé avec un `failure_code` donné, ou qui reste en attente, et un retrait refusé. Utilisez-les dans vos tests plutôt que de les recopier. Ils ne fonctionnent qu'avec une clé sandbox.",
+        "operationId": "listTestMobileMoneyNumbers",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "country",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Un seul pays, par exemple `CMR`"
+          },
+          {
+            "name": "provider",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Un seul opérateur, par exemple `MTN_MOMO_CMR`"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Les numéros de test",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "object": {
+                      "type": "string",
+                      "const": "list"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "has_more": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TestMobileMoneyNumber"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "object": "list",
+                  "url": "/api/v1/test_helpers/mobile_money_numbers",
+                  "has_more": false,
+                  "data": [
+                    {
+                      "country": "CMR",
+                      "provider": "ORANGE_CMR",
+                      "phone": "237693456789",
+                      "applies_to": "payment",
+                      "outcome": "succeeded",
+                      "failure_code": null
+                    },
+                    {
+                      "country": "CMR",
+                      "provider": "ORANGE_CMR",
+                      "phone": "237693456049",
+                      "applies_to": "payment",
+                      "outcome": "failed",
+                      "failure_code": "insufficient_balance"
+                    },
+                    {
+                      "country": "CMR",
+                      "provider": "ORANGE_CMR",
+                      "phone": "237693456129",
+                      "applies_to": "payment",
+                      "outcome": "pending",
+                      "failure_code": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationFailed"
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
@@ -8197,7 +8856,7 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "`card_payment` (confirmer une carte depuis votre formulaire) ou `redirect` (envoyer le client sur `redirect_url`).",
+            "description": "`card_payment` : la carte doit encore être saisie et confirmée par votre client, ce que fait le [paiement intégré](/payments/embedded). `redirect` : envoyer le client sur `redirect_url`.",
             "enum": [
               "card_payment",
               "redirect"
@@ -8205,7 +8864,7 @@
           },
           "client_secret": {
             "type": "string",
-            "description": "`card_payment` : secret qui confirme le paiement depuis votre formulaire."
+            "description": "`card_payment` : secret de confirmation de la carte, lié au réseau carte. Préférez le [paiement intégré](/payments/embedded), qui s'en charge pour vous."
           },
           "redirect_url": {
             "type": "string",
@@ -8540,6 +9199,21 @@
               "expired",
               "cancelled"
             ]
+          },
+          "ui_mode": {
+            "type": "string",
+            "enum": [
+              "hosted",
+              "embedded"
+            ],
+            "description": "`hosted` : page de paiement Mercy Pay. `embedded` : formulaire affiché dans votre page."
+          },
+          "client_secret": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "En mode `embedded` seulement : à transmettre au navigateur pour afficher le formulaire de paiement de cette session. Il n'ouvre que ce formulaire, rien d'autre. Ne le confondez pas avec votre clé API, qui reste sur votre serveur. `null` en mode `hosted`."
           },
           "metadata": {
             "type": [
@@ -10053,6 +10727,119 @@
             "description": "Durée de traitement, en millisecondes"
           }
         }
+      },
+      "EmbedDomain": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identifiant du site (`edom_…`)"
+          },
+          "object": {
+            "type": "string",
+            "const": "embed_domain"
+          },
+          "livemode": {
+            "type": "boolean",
+            "description": "`true` pour une clé live, `false` en sandbox. Un site autorisé vaut pour les deux environnements."
+          },
+          "created": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Date d'ajout, ISO 8601"
+          },
+          "hostname": {
+            "type": "string",
+            "description": "Le domaine, par exemple `boutique.com`. Il autorise aussi ses sous-domaines."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "verified",
+              "failed"
+            ],
+            "description": "`pending` tant que l'enregistrement TXT n'est pas trouvé, `verified` ensuite, `failed` s'il a disparu depuis plus de 7 jours."
+          },
+          "verification": {
+            "type": "object",
+            "description": "L'enregistrement DNS à créer chez votre hébergeur de domaine.",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "TXT"
+              },
+              "name": {
+                "type": "string",
+                "description": "Le nom de l'enregistrement, par exemple `_mercy-pay.boutique.com`"
+              },
+              "value": {
+                "type": "string",
+                "description": "La valeur exacte à mettre dans l'enregistrement"
+              }
+            }
+          },
+          "verified_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Première vérification réussie"
+          },
+          "last_checked_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Dernière lecture de l'enregistrement. Elle a lieu toutes les heures."
+          }
+        }
+      },
+      "TestMobileMoneyNumber": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string",
+            "description": "Pays (ISO 3166-1 alpha-3)"
+          },
+          "provider": {
+            "type": "string",
+            "description": "Code de l'opérateur, par exemple `MTN_MOMO_CMR`"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Numéro au format international, sans `+`"
+          },
+          "applies_to": {
+            "type": "string",
+            "enum": [
+              "payment",
+              "payout"
+            ],
+            "description": "Un paiement ou un retrait vers ce numéro"
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "succeeded",
+              "failed",
+              "pending"
+            ],
+            "description": "Le résultat obtenu à chaque fois"
+          },
+          "failure_code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Le `failure_code` du paiement échoué, quand le numéro en produit un précis"
+          }
+        }
       }
     },
     "headers": {
@@ -10063,6 +10850,2079 @@
           "enum": [
             "true"
           ]
+        }
+      }
+    }
+  },
+  "webhooks": {
+    "payment.succeeded": {
+      "post": {
+        "summary": "Paiement réussi",
+        "description": "Envoyé à vos endpoints abonnés à `payment.succeeded`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_payment_succeeded",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "payment.succeeded"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Payment"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "payment.failed": {
+      "post": {
+        "summary": "Paiement échoué",
+        "description": "Envoyé à vos endpoints abonnés à `payment.failed`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_payment_failed",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "payment.failed"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Payment"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "payment.refunded": {
+      "post": {
+        "summary": "Paiement remboursé, en tout ou en partie",
+        "description": "Envoyé à vos endpoints abonnés à `payment.refunded`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_payment_refunded",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "payment.refunded"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Payment"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "payment.disputed": {
+      "post": {
+        "summary": "Paiement contesté par le client",
+        "description": "Envoyé à vos endpoints abonnés à `payment.disputed`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_payment_disputed",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "payment.disputed"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Payment"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "payment.dispute_closed": {
+      "post": {
+        "summary": "Contestation close",
+        "description": "Envoyé à vos endpoints abonnés à `payment.dispute_closed`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_payment_dispute_closed",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "payment.dispute_closed"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Payment"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "refund.succeeded": {
+      "post": {
+        "summary": "Remboursement effectué",
+        "description": "Envoyé à vos endpoints abonnés à `refund.succeeded`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_refund_succeeded",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "refund.succeeded"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Refund"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "refund.failed": {
+      "post": {
+        "summary": "Remboursement échoué",
+        "description": "Envoyé à vos endpoints abonnés à `refund.failed`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_refund_failed",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "refund.failed"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Refund"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "refund.canceled": {
+      "post": {
+        "summary": "Remboursement annulé",
+        "description": "Envoyé à vos endpoints abonnés à `refund.canceled`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_refund_canceled",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "refund.canceled"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Refund"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "payout.paid": {
+      "post": {
+        "summary": "Retrait versé",
+        "description": "Envoyé à vos endpoints abonnés à `payout.paid`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_payout_paid",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "payout.paid"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Payout"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "payout.failed": {
+      "post": {
+        "summary": "Retrait échoué",
+        "description": "Envoyé à vos endpoints abonnés à `payout.failed`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_payout_failed",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "payout.failed"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Payout"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "payout.canceled": {
+      "post": {
+        "summary": "Retrait annulé",
+        "description": "Envoyé à vos endpoints abonnés à `payout.canceled`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_payout_canceled",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "payout.canceled"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Payout"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "subscription.created": {
+      "post": {
+        "summary": "Abonnement créé",
+        "description": "Envoyé à vos endpoints abonnés à `subscription.created`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_subscription_created",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "subscription.created"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Subscription"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "subscription.updated": {
+      "post": {
+        "summary": "Abonnement modifié",
+        "description": "Envoyé à vos endpoints abonnés à `subscription.updated`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_subscription_updated",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "subscription.updated"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Subscription"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "subscription.past_due": {
+      "post": {
+        "summary": "Abonnement en retard de paiement",
+        "description": "Envoyé à vos endpoints abonnés à `subscription.past_due`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_subscription_past_due",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "subscription.past_due"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Subscription"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "subscription.unpaid": {
+      "post": {
+        "summary": "Abonnement impayé",
+        "description": "Envoyé à vos endpoints abonnés à `subscription.unpaid`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_subscription_unpaid",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "subscription.unpaid"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Subscription"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "subscription.paused": {
+      "post": {
+        "summary": "Abonnement en pause",
+        "description": "Envoyé à vos endpoints abonnés à `subscription.paused`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_subscription_paused",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "subscription.paused"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Subscription"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "subscription.resumed": {
+      "post": {
+        "summary": "Abonnement repris",
+        "description": "Envoyé à vos endpoints abonnés à `subscription.resumed`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_subscription_resumed",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "subscription.resumed"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Subscription"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "subscription.canceled": {
+      "post": {
+        "summary": "Abonnement annulé",
+        "description": "Envoyé à vos endpoints abonnés à `subscription.canceled`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_subscription_canceled",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "subscription.canceled"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Subscription"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "invoice.created": {
+      "post": {
+        "summary": "Facture créée",
+        "description": "Envoyé à vos endpoints abonnés à `invoice.created`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_invoice_created",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "invoice.created"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Invoice"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "invoice.upcoming": {
+      "post": {
+        "summary": "Facture à venir",
+        "description": "Envoyé à vos endpoints abonnés à `invoice.upcoming`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_invoice_upcoming",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "invoice.upcoming"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Invoice"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "invoice.paid": {
+      "post": {
+        "summary": "Facture payée",
+        "description": "Envoyé à vos endpoints abonnés à `invoice.paid`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_invoice_paid",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "invoice.paid"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Invoice"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "invoice.canceled": {
+      "post": {
+        "summary": "Facture annulée",
+        "description": "Envoyé à vos endpoints abonnés à `invoice.canceled`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_invoice_canceled",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "invoice.canceled"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Invoice"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "invoice.payment_failed": {
+      "post": {
+        "summary": "Paiement de facture échoué",
+        "description": "Envoyé à vos endpoints abonnés à `invoice.payment_failed`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_invoice_payment_failed",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "invoice.payment_failed"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Invoice"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "checkout_session.completed": {
+      "post": {
+        "summary": "Session de paiement terminée",
+        "description": "Envoyé à vos endpoints abonnés à `checkout_session.completed`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_checkout_session_completed",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "checkout_session.completed"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/CheckoutSession"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "provider_status.changed": {
+      "post": {
+        "summary": "Disponibilité d'un opérateur modifiée",
+        "description": "Envoyé à vos endpoints abonnés à `provider_status.changed`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_provider_status_changed",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "provider_status.changed"
+                      },
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "object": {
+                            "type": "string",
+                            "const": "provider_status"
+                          },
+                          "provider": {
+                            "type": "string",
+                            "description": "Code de l'opérateur, par exemple `MTN_MOMO_CMR`"
+                          },
+                          "country": {
+                            "type": "string",
+                            "description": "Pays (ISO 3166-1 alpha-3)"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "operational",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "previous_status": {
+                            "type": "string",
+                            "enum": [
+                              "operational",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "changed_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
+        }
+      }
+    },
+    "account.updated": {
+      "post": {
+        "summary": "Réglages du compte modifiés",
+        "description": "Envoyé à vos endpoints abonnés à `account.updated`. Répondez `2xx` dans les 10 secondes ; sinon l'envoi est retenté. Voir [Événements](/developers/webhooks/events).",
+        "operationId": "webhook_account_updated",
+        "tags": [
+          "Événements"
+        ],
+        "parameters": [
+          {
+            "name": "MercyPay-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "`t=<horodatage>,v1=<signature>`. À vérifier avant tout traitement, voir [Sécurité](/developers/webhooks/security)."
+          },
+          {
+            "name": "MercyPay-Event-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de l'événement (`evt_…`), le même que `id` dans le corps"
+          },
+          {
+            "name": "MercyPay-Event-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "MercyPay-Delivery-Id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Identifiant de cet envoi (`whd_…`)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Event"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "account.updated"
+                      },
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "changed": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Les réglages modifiés, à relire avec [`GET /api/v1/account`](/api/account/get)"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Événement reçu. Tout autre code fait retenter l'envoi."
+          }
         }
       }
     }

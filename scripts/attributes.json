@@ -74,5 +74,9 @@
  [
   "test_helpers",
   "TestHelpersResource"
+ ],
+ [
+  "embed_domains",
+  "EmbedDomainsResource"
  ]
 ]

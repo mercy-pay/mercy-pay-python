@@ -99,9 +99,44 @@ Une coupure réseau, un `429` ou une erreur `5xx` sont retentés deux fois. Chaq
 MercyPay(api_key, timeout=30.0, max_retries=2, http_client=httpx.Client(proxy="…"))
 ```
 
+## Paramètres typés
+
+Chaque méthode décrit les arguments que l'API accepte (`TypedDict`) : votre éditeur les propose, et mypy ou Pyright signalent un argument obligatoire oublié ou une valeur inconnue. Les opérateurs, les pays et les types d'événements sont dans `mercypay.catalog` :
+
+```python
+from mercypay import catalog
+
+mercy_pay.payments.create(
+    amount=1000,
+    currency="XAF",
+    country="CMR",
+    provider=catalog.MTN_MOMO_CMR,
+    phone="237653456789",
+    idempotency_key="order-4821",
+)
+```
+
+## Attendre le résultat
+
+Pour un script ou un test, attendez qu'un paiement ait un statut final :
+
+```python
+payment = mercy_pay.payments.wait_for_final_status(payment_id, timeout=60)
+session = mercy_pay.checkout_sessions.wait_for_completion(session_id)
+```
+
+La lecture se répète, de plus en plus espacée. Passé le délai, `WaitTimeoutError` donne le dernier état dans `last`. Sur un serveur en production, préférez le webhook `payment.succeeded`.
+
 ## Sandbox
 
-Une clé `mp_sandbox_…` ne touche pas à l'argent réel. `mercy_pay.test_helpers.trigger_event(type="payment.succeeded")` envoie un événement de test à vos endpoints, et la [CLI](https://docs.mercy-pay.com/developers/cli) relaie les webhooks vers votre ordinateur.
+Une clé `mp_sandbox_…` ne touche pas à l'argent réel.
+
+```python
+# Le numéro de test qui produit ce résultat :
+phone = mercy_pay.test_helpers.mobile_money_number(catalog.ORANGE_CMR, "insufficient_balance")
+```
+
+Les résultats possibles : `succeeded`, `pending`, `payout_failed`, ou un `failure_code` comme `insufficient_balance`. `mercy_pay.test_helpers.trigger_event(type="payment.succeeded")` envoie un événement de test à vos endpoints, et la [CLI](https://docs.mercy-pay.com/developers/cli) relaie les webhooks vers votre ordinateur.
 
 ## Développement
 

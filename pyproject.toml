@@ -10,7 +10,7 @@ readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.10"
-dependencies = ["httpx>=0.27,<1"]
+dependencies = ["httpx>=0.27,<1", "typing-extensions>=4.7"]
 keywords = ["mercy pay", "paiement", "mobile money", "webhooks", "api"]
 classifiers = [
     "Programming Language :: Python :: 3",
